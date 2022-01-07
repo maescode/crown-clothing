@@ -40,6 +40,7 @@ class App extends Component {
   componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
+
   render() {
     return (
       <div className='App'>
