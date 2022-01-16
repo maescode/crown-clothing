@@ -11,10 +11,6 @@ import { setCurrentUser } from './redux/user/user.actions';
 import './App.css';
 
 class App extends Component {
-  constructor() {
-    super();
-  }
-
   unsubscribeFromAuth = null;
 
   componentDidMount() {
