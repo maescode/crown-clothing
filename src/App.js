@@ -6,8 +6,14 @@ import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import CheckoutPage from './pages/checkout/checkout.component';
 
+// import { selectCollectionsForPreview } from './redux/shop/shop.selector';
+
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import {
+  auth,
+  createUserProfileDocument,
+  addCollectionsAndDocument,
+} from './firebase/firebase.utils';
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
@@ -18,7 +24,7 @@ class App extends Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, collectionsArray } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
@@ -30,6 +36,10 @@ class App extends Component {
         });
       } else {
         setCurrentUser(userAuth);
+        addCollectionsAndDocument(
+          'collection',
+          collectionsArray.map(({ title, items }) => ({ title, items }))
+        );
       }
     });
   }
@@ -63,6 +73,7 @@ class App extends Component {
 }
 const mapStatesToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  //
 });
 
 const mapDispatchToProps = (dispatch) => ({
